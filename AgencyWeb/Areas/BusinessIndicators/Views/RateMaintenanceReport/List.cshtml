@@ -1,0 +1,400 @@
+﻿@using AgencyWeb.Areas.BusinessIndicators.Models;
+@using AgencyWeb.Models
+@using AgencyWeb.Areas.BusinessIndicators.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<RateMaintenanceReportController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Báo cáo tỷ lệ duy trì hoạt động</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header  card-control-filter">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    @(Html.DevExtreme().SelectBox().ID("cboHierarchy")
+                        //.DataSource(d => d.WebApi().Area("Functions").Controller("Product").LoadAction("GetPaymodeList"))
+                        //.DisplayExpr("PayModeName")
+                        //.ValueExpr("PayModeID")
+                        .SearchEnabled(true)
+                        .DisplayExpr("Name")
+                        .ValueExpr("Code")
+                        .Value("1")
+                        .DataSource(new object[] {
+                    new { Code = "1", Name = "Chanel"},
+                    new { Code = "2", Name = "Region"},
+                    new { Code = "3", Name = "Area"},
+                    new { Code = "4", Name = "Zone"},
+                    new { Code = "5", Name = "Team"},
+                    new { Code = "6", Name = "Unit"},
+                    new { Code = "7", Name = "Candidate"},
+                        })
+                        )
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().SelectBox()
+                                    .SearchEnabled(true)
+                                    .DisplayExpr("Name")
+                                    .ValueExpr("Code")
+                                    .Label("Tình trạng hợp đồng").LabelMode(EditorLabelMode.Floating).Placeholder("Chọn")
+                                    .DataSource(new object[] {
+                                new { Code = "1", Name = "Đang hiệu lực"},
+                                new { Code = "2", Name = "Mất hiệu lực"},
+                                    })
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Bên mua bảo hiểm").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Tên TVTC").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Mã số TVTC").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Từ ngày phát hành hợp đồng")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("fromDate")
+                                    .DisplayFormat("dd/MM/yyyy").LabelMode(EditorLabelMode.Floating)
+                                    .UseMaskBehavior(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Đến ngày phát hành hợp đồng")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("toDate")
+                                    .DisplayFormat("dd/MM/yyyy").LabelMode(EditorLabelMode.Floating)
+                                    .UseMaskBehavior(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Từ ngày mất hiệu lực")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("fromDate")
+                                    .DisplayFormat("dd/MM/yyyy").LabelMode(EditorLabelMode.Floating)
+                                    .UseMaskBehavior(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Đến ngày mất hiệu lực")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("toDate")
+                                    .DisplayFormat("dd/MM/yyyy").LabelMode(EditorLabelMode.Floating)
+                                    .UseMaskBehavior(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Từ ngày kết thúc gia hạn đóng phí")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("fromDate")
+                                    .DisplayFormat("dd/MM/yyyy").LabelMode(EditorLabelMode.Floating)
+                                    .UseMaskBehavior(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Đến ngày kết thúc gia hạn đóng phí")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("toDate")
+                                    .DisplayFormat("dd/MM/yyyy").LabelMode(EditorLabelMode.Floating)
+                                    .UseMaskBehavior(true)
+                                    )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row button-search-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện</button>
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(
+                        Html.DevExtreme().DataGrid()
+                        .ID("gridList")
+                        .DataSource(d => d.WebApi()
+                        .Area("BusinessIndicators")
+                        .Controller("RateMaintenanceReport")
+                        .LoadAction("GetList")
+                        .Key("RateMaintenanceReportId")
+                        )
+                        .ShowBorders(true)
+                        //.Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGrid")
+                        .Columns(columns =>
+                        {
+                            @* columns.Add().Caption("").Width(40)
+                    .DataField(nameof(RateMaintenanceReportDto.RateMaintenanceReportId))
+                    .CellTemplate(@<text>
+                    <span class="glyphicon glyphicon-eye-open icon-grid" onclick='onViewClicked("<%= value %>")'></span>
+                    </text>); *@
+
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.RateMaintenanceReportId)).Visible(false);
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.ToBeRenewed)).Caption("Dự định tái tục");
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.Policy)).Caption("Hợp đồng");
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.PolicyOwner)).Caption("Tên chủ hợp đồng");
+
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.DateOfFirstIssued)).Caption("Ngày phát hành")
+                            .DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.DateOfClosePaid)).Caption("Ngày kết thúc gia hạn đóng phí")
+                            .DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.PolicyStatus)).Caption("Tình trạng hợp đồng");
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.IssuedAPE)).Caption("APE tại thời điểm phát hành");
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.CurrentAPE)).Caption("APE tại thời điểm xét");
+
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.Agent)).Caption("TVTC");
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.AgentStatus)).Caption("Tình trạng hoạt động của TVTC");
+                            columns.Add().DataField(nameof(RateMaintenanceReportDto.SharedAgent)).Caption("TVTC đồng phục vụ");
+
+                        })
+                        @* .MasterDetail(md =>
+                    {
+                    md.Enabled(true);
+                    md.Template(@<text>
+                    @(Html.DevExtreme().DataGrid().ElementAttr("masterid", new JS("data.RateMaintenanceReportId"))
+                    .ID("gridDetailContainer")
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    .Columns(columns =>
+                    {
+                    columns.Add().DataField(nameof(RateMaintenanceReportChildDto.RateMaintenanceReportChildId)).Visible(false);
+                    columns.Add().DataField(nameof(RateMaintenanceReportChildDto.InforceAPE)).Caption("Người duyệt");
+                    columns.Add().DataField(nameof(RateMaintenanceReportChildDto.InforceAPE)).Caption("Mã người duyệt");
+                    columns.Add().DataField(nameof(RateMaintenanceReportChildDto.InforceAPE)).Caption("Số điện thoại");
+                    columns.Add().DataField(nameof(RateMaintenanceReportChildDto.InforceAPE)).Caption("Vị trí");
+
+                    columns.Add().DataField(nameof(RateMaintenanceReportChildDto.InforceAPE)).Caption("Ngày duyệt").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                    })
+                    .DataSource(d => d.WebApi()
+                    .Area("BusinessIndicators")
+                    .Controller("RateMaintenanceReport")
+                    .LoadAction("GetDataTableChildList")
+                    .LoadParams(new { id = new JS("data.RateMaintenanceReportId") })
+                    .Key("RateMaintenanceReportChildId")
+                    )
+                    //.Visible(new JS("data.TYPE === 'MENU'"))
+                    )
+
+                    </text>);
+
+                    }) *@
+                        //.OnRowDblClick("onRowDblClickGridAgentList")
+                        //.WordWrapEnabled(true)
+                        //.ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .SelectedRowKeys(@Model?.RateMaintenanceReportId)
+                        .OnSelectionChanged("SelectionChanged")
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <span style="font-weight: bold;">
+                            Tỷ lệ duy trì hợp đồng năm 2
+                        </span>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("APE còn hiệu lực / APE phát hành").LabelMode(EditorLabelMode.Floating)
+                                .Value("710.838 triệu VNĐ / 716.261 triệu VNĐ")
+                                .ID("1")
+                                .ReadOnly(true)
+                                .MaxLength(100))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("Tỷ lệ duy trì hợp đồng năm 2").LabelMode(EditorLabelMode.Floating)
+                                .Value("99.24%")
+                                .ID("2")
+                                .ReadOnly(true)
+                                .MaxLength(100))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <span style="font-weight: bold;">
+                            Ước tính theo tỷ lệ duy trì hợp đồng mong muốn
+                        </span>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("Tỷ lệ duy trì hợp đồng mong muốn").LabelMode(EditorLabelMode.Floating)
+                                .ID("3")
+                                .MaxLength(100))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("Tổng APE cần tái lục").LabelMode(EditorLabelMode.Floating)
+                                .Value("1.500 Triệu VNĐ")
+                                .ID("4")
+                                .ReadOnly(true))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("APE của những hợp đồng có khả năng mất hiệu lực trong tháng").LabelMode(EditorLabelMode.Floating)
+                                .Value("4.294 Triệu VNĐ")
+                                .ID("5")
+                                .ReadOnly(true))
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <span style="font-weight: bold;">
+                            Ước tính theo số hợp đồng dự định tái tục
+                        </span>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().NumberBox()
+                                .Label("Tổng số hợp đông dự định tái tục").LabelMode(EditorLabelMode.Floating)
+                                .ID("6")
+                                .Value(15).ReadOnly(true))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().NumberBox()
+                                .Label("Tổng APE dự định tái tục").LabelMode(EditorLabelMode.Floating)
+                                .ID("7")
+                                .Value(75).ReadOnly(true))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("Tỷ lệ duy trì hợp đồng ước tính").LabelMode(EditorLabelMode.Floating)
+                                .ID("8")
+                                .Value("90%").ReadOnly(true))
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // function onViewAgentClicked() {
+    //     location.href = '@Url.Action("AgentDetail", "Agent", new { area = "BusinessIndicators" })';
+    // }
+
+    // function onRowDblClickGridAgentList() {
+    //     location.href = '@Url.Action("AgentDetail", "Agent", new { area = "BusinessIndicators" })';
+    // }
+    function SelectionChanged(e) {
+        //console.log("SelectionChanged = ", e.component.getSelectedRowKeys());
+        //console.log("SelectionChanged = ", e.selectedRowsData[0]);
+        var data = e.selectedRowsData[0];
+        if (data) {
+            var data1 = Intl.NumberFormat().format(data.child[0].InforceAPE) + " triệu VNĐ / " + Intl.NumberFormat().format(data.child[0].IssuedAPE) + " triệu VNĐ"
+            $("#1").dxTextBox("instance").option("value", data1);
+        }
+        //var modelSelected = Model.First();
+        //console.log("SelectionChanged = ", modelSelected);
+    }
+
+    function contextMenu_preparing(e) {
+        console.log(e);
+        debugger;
+    }
+
+    function exportingGrid(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('RateMaintenanceReport');
+
+        DevExpress.excelExporter.exportPivotGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'RateMaintenanceReportList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+

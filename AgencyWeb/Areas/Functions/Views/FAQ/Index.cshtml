@@ -1,0 +1,35 @@
+﻿@model List<FAQDto>;
+
+@{
+    var count = 0;
+
+}
+<div class="container-fluid p-0">
+    <div class="banner-header-news" style="background-image: url(../images/news/background-top-faq.png);">
+        <div class="banner-header-news-text">
+            <h1>Câu Hỏi Thường Gặp</h1>
+            <h3>Shinhan Life Việt nam</h3>
+            <h6>Cám ơn bạn đã ghé thăm trang web của Shinhan Life Việt Nam</h6>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var p in Model)
+        {
+            count += 1;
+            var collapseString = "collapse" + count.ToString();
+            var hrefString = "#" + collapseString;
+            <a data-bs-toggle="collapse" href=@hrefString role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="card card-body form-control-ui">
+                    <p class="FAQQuestion form-title">
+                        <strong>@count. @p.Question</strong>
+                    </p>
+                    <div class="collapse" id=@collapseString>
+                        <p class="FAQAnswer">@p.Answer</p>
+                    </div>
+                </div>
+            </a>
+        }
+
+    </div>
+</div>
+

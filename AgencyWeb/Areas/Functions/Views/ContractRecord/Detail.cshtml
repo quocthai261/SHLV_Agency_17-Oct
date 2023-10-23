@@ -1,0 +1,315 @@
+﻿@using AgencyWeb.Areas.Functions.Controllers;
+@using AgencyWeb.Models
+@using AgencyWeb.Areas.BusinessIndicators.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model ContractRecordDto
+
+@inject IHtmlLocalizer<ContractRecordController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+
+<div class="container-fluid p-0">
+   @*  <h1 class="h5 mb-3 form-title">
+        Danh sách TVTC
+        <i class="fa fa-caret-right" aria-none="true"></i>
+        <strong>Hỗ sơ TVTC</strong>
+    </h1> *@
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card card-body form-control-ui">
+                <p>
+                    <a class="form-title" data-bs-toggle="collapse" href="#collapse01" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <strong>Chi tiết hồ sơ hợp đồng</strong>
+                    </a>
+                </p>
+                <div class="collapse show" id="collapse01">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Hồ sơ YCBH").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.Proposal).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.Policy).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Sản phẩm chính").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.MainProduct).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Bên mua bảo hiểm").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.PolicyOwner).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Địa chỉ khách hàng").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.AddressCustomer).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Người được bảo hiểm").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.LifeAssured).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().NumberBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Phí định kỳ").LabelMode(EditorLabelMode.Floating)
+                                    .Value(Model.RegularPremium).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().NumberBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Phí tạm thu").LabelMode(EditorLabelMode.Floating)
+                                    .Value(Model.TemporaryCollection).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Tình trạng hồ sơ/hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.StatusProposal).ReadOnly(true))
+                            </div>
+                        </div>
+                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Thông báo thông tin cần bổ sung").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.InformationMore).ReadOnly(true))
+                            </div>
+                        </div>
+                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.DateAdditionalDocument)
+                                    .Label("Ngày đến hạn bổ sung hồ sơ").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.DateAdditionalContract)
+                                    .Label("Ngày nộp hồ sơ YCBH").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.ReleaseDateContract)
+                                    .Label("Ngày phát hành hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.DateNBUTransferCS)
+                                    .Label("Ngày NBU giao hợp đồng cho CS").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.DateCSReceiveContract)
+                                    .Label("Ngày CS nhận hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.DateTVTCReceiveContract)
+                                    .Label("Ngày TVTC nhận hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.DateSignContract)
+                                    .Label("Ngày ký xác nhận bàn giao Hợp đồng bảo hiểm").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.DateTVTCSendMailCS)
+                                    .Label("Ngày TVTC nộp thư xác nhận về CS").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.EndDateFee)
+                                    .Label("Ngày kết thúc gia hạn đóng phí").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Value(Model.ExpiresDate)
+                                    .Label("Ngày mất hiệu lực").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .ReadOnly(true)
+                                    )
+                            </div>
+                        </div>
+
+
+                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Tình trạng bàn giao hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.Status).ReadOnly(true))
+                            </div>
+                        </div>
+                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Tư vấn tài chính").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.TVTCName).ReadOnly(true))
+                            </div>
+                        </div>
+                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Tư vấn tài chính đồng phục vụ").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.TVTCOtherName).ReadOnly(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Chi nhánh/PGD").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).Value(Model.OfficeName).ReadOnly(true))
+                            </div>
+                        </div>
+
+
+
+                        
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <div>
+                                    <span>Tải thư thông báo</span>
+                                </div>
+                                <div>
+                                    <span class="glyphicon glyphicon-download icon-grid" onclick="onViewClicked()"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row button-search-row">
+                    <div class="col-md-12">
+                        <button class="btn btn-purple-style" type="submit" onclick="onBackToAgentListClicked()"><span class="glyphicon glyphicon-triangle-left"></span> Trở về</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function onBackToAgentListClicked() {
+        location.href = '@Url.Action("List", "ContractRecord", new { area = "Functions" })';
+    }  
+</script>

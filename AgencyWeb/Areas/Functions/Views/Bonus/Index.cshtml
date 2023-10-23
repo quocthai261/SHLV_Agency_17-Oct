@@ -1,0 +1,70 @@
+﻿<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Thưởng tháng/quý/năm</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(
+                        Html.DevExtreme().PivotGrid()
+                        .ID("BonusGrid")
+                        .AllowSortingBySummary(true)
+                        .AllowSorting(true)
+                        .AllowFiltering(true)
+                        .AllowExpandAll(true)
+                        .ShowBorders(true)
+                        .Export(e => e.Enabled(true))
+                        .OnExporting("onExportingBonusGrid")
+                        .FieldChooser(c => c.Enabled(false))
+                        .DataSource(d => d
+                        .Store(s => s.WebApi()
+                        .Area("Functions")
+                        .Controller("Bonus")
+                        .LoadAction("GetBonusList"))                      
+                        .Fields(fields =>
+                        {
+                            fields.Add()
+                            .Caption("Tên thưởng")
+                            .Width(120)
+                            .DataField("BonusName")
+                            .Area(PivotGridArea.Row).Width(200);
+
+                            fields.Add()
+                            .DataField("BonusDate")
+                            .DataType(PivotGridDataType.Date)
+                            .Area(PivotGridArea.Column);
+
+                            fields.Add()
+                            .Caption("Số tiền")
+                            .DataField("Amount")
+                            .DataType(PivotGridDataType.Number)
+                            .SummaryType(SummaryType.Sum)
+                            .Format(format => format
+                            //.Type("currency")
+                            .Precision(0) // Number of decimal places
+                            //.Currency("VND")
+                            )
+                            .Area(PivotGridArea.Data).Width(80);
+                        })
+                        )
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onExportingBonusGrid(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Sales');
+
+        DevExpress.excelExporter.exportPivotGrid({
+            component: e.component,
+            worksheet: worksheet
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Bonus.xlsx');
+            });
+        });
+    }
+</script>

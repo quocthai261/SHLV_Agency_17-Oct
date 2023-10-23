@@ -1,0 +1,195 @@
+﻿@using AgencyWeb.Areas.BusinessIndicators.Models;
+@using AgencyWeb.Models
+@using AgencyWeb.Areas.BusinessIndicators.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<MonthlySalesReportController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+<style>
+    .dx-row.dx-column-lines.dx-header-row {
+        background-color: #e9e9e9;
+    }
+
+    .dx-header-row > td > .dx-datagrid-text-content {
+        color: #383838;
+    }
+</style>
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Báo cáo kinh doanh tháng</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header  card-control-filter">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    @(Html.DevExtreme().SelectBox().ID("cboHierarchy")
+                        //.DataSource(d => d.WebApi().Area("Functions").Controller("Product").LoadAction("GetPaymodeList"))
+                        //.DisplayExpr("PayModeName")
+                        //.ValueExpr("PayModeID")
+                        .SearchEnabled(true)
+                        .DisplayExpr("Name")
+                        .ValueExpr("Code")
+                        .Value("1")
+                        .DataSource(new object[] {
+                    new { Code = "1", Name = "Chanel"},
+                    new { Code = "2", Name = "Region"},
+                    new { Code = "3", Name = "Area"},
+                    new { Code = "4", Name = "Zone"},
+                    new { Code = "5", Name = "Team"},
+                    new { Code = "6", Name = "Unit"},
+                    new { Code = "7", Name = "Candidate"},
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(
+                        Html.DevExtreme().DataGrid()
+                        .ID("gridAgentList")
+                        .DataSource(d => d.WebApi()
+                        .Area("BusinessIndicators")
+                        .Controller("MonthlySalesReport")
+                        .LoadAction("GetList")
+                        .Key("MonthlySalesReportId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGrid")
+                        .Columns(columns =>
+                        {
+                            columns.Add().DataField(nameof(MonthlySalesReportDto.MonthlySalesReportId)).Visible(false);
+
+                            columns.Add().DataField(nameof(MonthlySalesReportDto.TypeName)).Caption("Kênh").MinWidth(150);
+
+                            columns.Add().Caption("IP (MTD)")
+                            .Columns(s =>
+                            {
+                                s.Add().DataField(nameof(MonthlySalesReportDto.IPSubmittedActual)).Caption("Nộp trong tháng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.IPSubmittedPercentLastMonth)).Caption("So với cùng kỳ tháng trước").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.IPNetIssuedActual)).Caption("Phát hành thuần trong tháng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.IPNetIssuedPercentLastMonth)).Caption("So với cùng kỳ tháng trước").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.IPPendingActual)).Caption("Đang thẩm định").Format(Format.FixedPoint).Width(100);
+                            });
+
+                            columns.Add().Caption("MP (Monthly premium - MTD)")
+                            .Columns(s =>
+                            {
+                                s.Add().DataField(nameof(MonthlySalesReportDto.MPSubmittedActual)).Caption("Nộp trong tháng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.MPSubmittedPercentLastMonth)).Caption("So với cùng kỳ tháng trước").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.MPNetIssuedActual)).Caption("Phát hành thuần").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.MPNetIssuedPercentLastMonth)).Caption("So với cùng kỳ tháng trước").Width(100);
+                            });
+
+                            columns.Add().Caption("APE (MTD)")
+                            .Columns(s =>
+                            {
+                                s.Add().DataField(nameof(MonthlySalesReportDto.APESubmittedActual)).Caption("Nộp trong tháng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.APESubmittedPercentLastMonth)).Caption("So với cùng kỳ tháng trước").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.APENetIssuedTarget)).Caption("Chỉ tiêu").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.APENetIssuedActual)).Caption("Phát hành thuần trong tháng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.APENetIssuedPercentTarget)).Caption("Tỷ lệ hoàn thành chỉ tiêu").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.APENetIssuedPercentLastMonth)).Caption("So với cùng kỳ tháng trước").Width(100);
+
+                            });
+
+                            columns.Add().DataField(nameof(MonthlySalesReportDto.RenewalCollectedActual)).Caption("Phí tái tục (MTD)").Width(100);
+
+                            columns.Add().Caption("Số lượng hợp đồng (MTD)")
+                            .Columns(s =>
+                            {
+                                s.Add().DataField(nameof(MonthlySalesReportDto.PolicySubmitted)).Caption("Nộp trong tháng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.PolicyIssueed)).Caption("Phát hành thuần trong tháng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.PolicyPending)).Caption("Đang thẩm định").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.PolicyIPPerIssued)).Caption("IP / Hợp đồng").Format(Format.FixedPoint).Width(100);
+
+                            });
+
+                            columns.Add().Caption("TVTC (MTD)")
+                            .Columns(s =>
+                            {
+                                s.Add().DataField(nameof(MonthlySalesReportDto.ManpowerNumberInforce)).Caption("Đang hoạt động").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.ManpowerNumberRecruit)).Caption("Tuyển dụng").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.ManpowerNumberActive)).Caption("Có hoạt động").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.ManpowerProductivityActiveRatio)).Caption("Tỷ lệ hoạt động").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.ManpowerProductivityIPPerActive)).Caption("IP / TVTC có hoạt động").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.ManpowerProductivityAPEPerActive)).Caption("Phí quy tháng / TVTC có hoạt động").Width(120);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.ManpowerProductivityMPPerActive)).Caption("APE / TVTC có hoạt động").Width(100);
+
+                            });
+
+                            columns.Add().Caption("YTD")
+                            .Columns(s =>
+                            {
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDIPActual)).Caption("IP phát hành thuần trong năm").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDIPPercentLastMonth)).Caption("IP so với cùng kỳ năm trước").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDMPActual)).Caption("MP phát hành thuần trong năm").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDMPPercentLastMonth)).Caption("MP so với cùng kỳ năm trước").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDAPETarget)).Caption("Chỉ tiêu APE năm").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDAPEActual)).Caption("APE phát hành thuần trong năm").Format(Format.FixedPoint).Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDAPEPercentTarget)).Caption("Tỷ lệ hoàn thành APE năm").Width(100);
+                                s.Add().DataField(nameof(MonthlySalesReportDto.YTDAPEPercentLastYear)).Caption("APE so với cùng kỳ năm trước").Width(100);
+
+                            });
+
+
+                        })
+                        //.OnRowDblClick("onRowDblClickGridAgentList")
+                        .WordWrapEnabled(true)
+                        //.ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // function onViewAgentClicked() {
+    //     location.href = '@Url.Action("AgentDetail", "Agent", new { area = "BusinessIndicators" })';
+    // }    
+    
+    // function onRowDblClickGridAgentList() {
+    //     location.href = '@Url.Action("AgentDetail", "Agent", new { area = "BusinessIndicators" })';
+    // }
+
+    function exportingGrid(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('MonthlySalesReport');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'MonthlySalesReportList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+

@@ -1,0 +1,37 @@
+﻿@model List<AgencyWeb.Areas.Functions.Models.NewsAndEventDto>;
+
+<div class="banner-header-news" style="background-image: url(../../../../wwwroot/images/BackgroundLogin.jpg);">
+    <div class="banner-header-news-text">
+        <h1>Tin tức & Sự kiện</h1>
+        <h3>Shinhan Life Việt nam</h3>
+        <h6>Cám ơn bạn đã ghé thăm trang web của Shinhan Life Việt Nam</h6>
+    </div>
+</div>
+<div class="container-fluid p-0">
+    <div class="row">
+        @foreach (var p in Model)
+        {
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3 col-xxl-3 d-flex">
+                <div class="card flex-fill w-100 form-control-ui">
+                    <div class="card-body py-3 card-news">
+                        <div class="row">
+                            <img class="img-news" decoding="async" width="900" height="600" src="@p.Image" />
+                            <div class="row-content">
+                                <p class="newsTitle"><strong><a class="news-title" asp-controller="NewsAndEvent" asp-action="NewsAndEventDetail" asp-route-id="@p.NewsAndEventId">@p.Title</a></strong></p>
+                                <p class="newsPublishedDate">@p.PublishedDate</p>
+                                <p class="newsSummary">@p.Summary</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <button class="newsDetail" asp-controller="NewsAndEvent" asp-action="NewsAndEventDetail" asp-route-id="@p.NewsAndEventId">
+                            Tìm hiểm thêm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div> <!-- ast-container -->
+</div>
+

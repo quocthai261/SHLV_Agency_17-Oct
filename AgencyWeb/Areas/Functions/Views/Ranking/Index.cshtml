@@ -1,0 +1,744 @@
+﻿@using AgencyWeb.Models
+@using AgencyWeb.Areas.Account.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+<style>
+    .dx-row.dx-column-lines.dx-header-row {
+        background-color: var(--white-color);
+    }
+
+    .dx-header-row > td > .dx-datagrid-text-content {
+        color: var(--purple-color);
+    }
+
+    .ranking-title {
+        color: var(--purple-color);
+        font-weight:700;
+    }
+
+    .progress-bar {
+        text-align:center;
+        width: 100%;
+        height: 100px;
+        position: relative;
+        background-color: white;
+        box-shadow:none;
+    }
+
+        .progress-bar .progress-bar__trace {
+            height: 6px;
+            width: 100%;
+            margin: auto auto;
+            top: 35%;
+            background-color: #d2d2d2;
+            position: relative;
+            transform: translateY(-50%);
+            display: block;
+            float: left;
+            overflow: hidden;
+        }
+
+        .progress-bar .progress-bar__background {
+            width: 100%;
+            height: 100%;
+            background-color: var(--purple-color);
+            transition: transform .3s ease-in-out;
+        }
+
+    .step-1.progress-bar .progress-bar__background {
+        transform: translateX(-77%);
+    }
+
+    .step-2.progress-bar .progress-bar__background {
+        transform: translateX(-44%);
+    }
+
+    .step-3.progress-bar .progress-bar__background {
+        transform: translateX(-14%);
+    }
+
+    .step-4.progress-bar .progress-bar__background {
+        transform: translateX(0%);
+    }
+
+    .progress-bar .progress-bar__icon {
+        transition: all .3s ease-in-out;
+        width: 60px;
+        height: 60px;
+        background-color: white;
+        border: solid 3px #d2d2d2;
+        transform: translateY(-50%);
+        position: absolute;
+        display: inline-block;
+        border-radius: 50%;
+        top: 35%;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+        .progress-bar .progress-bar__icon svg {
+            fill: #f2f2f2;
+            width: 50%;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .progress-bar .progress-bar__icon span {
+            position: absolute;
+            bottom: -30px;
+            width: 150px;
+            left: 50%;
+            text-align: center;
+            transform: translateX(-50%);
+        }
+
+        .progress-bar .progress-bar__icon.first-icon {
+            left: 0;
+        }
+
+        .progress-bar .progress-bar__icon.second-icon {
+            left: calc((100% / 3) - 23.333333333333px);
+        }
+
+        .progress-bar .progress-bar__icon.third-icon {
+            right: calc((100% / 3) - 23.333333333333px);
+        }
+
+        .progress-bar .progress-bar__icon.last-icon {
+            right: 0;
+        }
+
+    .step-1.progress-bar .progress-bar__icon.first-icon {
+        border: solid 3px var(--purple-color);
+        background-color: var(--purple-color);
+    }    
+    
+        .step-1.progress-bar .progress-bar__icon.first-icon span {
+            color: var(--purple-color);
+        }
+
+        .step-1.progress-bar .progress-bar__icon.first-icon svg {
+            fill: var(--purple-color);
+        }
+
+    .step-2.progress-bar .progress-bar__icon.second-icon {
+        border: solid 3px var(--purple-color);
+        background-color: var(--purple-color);
+    }
+
+        .step-2.progress-bar .progress-bar__icon.second-icon span {
+            color: var(--purple-color);
+        }
+
+        .step-2.progress-bar .progress-bar__icon.second-icon svg {
+            fill: var(--purple-color);
+        }
+
+    .step-3.progress-bar .progress-bar__icon.third-icon {
+        border: solid 3px var(--purple-color);
+        background-color: var(--purple-color);
+    }
+
+        .step-3.progress-bar .progress-bar__icon.third-icon span {
+            color: var(--purple-color);
+        }
+
+        .step-3.progress-bar .progress-bar__icon.third-icon svg {
+            fill: var(--purple-color);
+        }
+
+    .step-4.progress-bar .progress-bar__icon.last-icon {
+        border: solid 3px var(--purple-color);
+        background-color: var(--purple-color);
+    }
+
+        .step-4.progress-bar .progress-bar__icon.last-icon span {
+            color: var(--purple-color);
+        }
+
+        .step-4.progress-bar .progress-bar__icon.last-icon svg {
+            fill: var(--purple-color);
+        }
+
+    .card.card-ranking{
+        margin: 0px !important;
+    }
+
+        .card.card-ranking .card-body {
+        padding: 10px !important;
+    }
+
+    .card.card-ranking .icon-card {
+        font-size: 30px;
+    }
+
+        .card.card-ranking .icon-card-ranking {
+            width: 1000px;
+        }
+
+    .title-bronze {
+        color: #c3682f !important;
+    }
+        .title-silver {
+        color: #a8ace9 !important;
+    }
+
+    .title-gold {
+        color: #eeb52b !important;
+    }
+
+    .title-master {
+        color: #9f53f1 !important;
+    }
+</style>
+
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Thông tin cá nhân</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-2">
+                            <div class="form-group" style="display: flex;">
+                                <img src="/images/ranking/gold.png" class="rounded-circle" style="width: 60px;" alt="Avatar" />
+                                <div style="padding: 0px 10px;">
+                                    <h4><strong>Vũ Trường Giang</strong></h4>
+                                    <p>Xếp hạng: Vàng</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-10">
+                            <div class="progress-bar step-1">
+                                <div class="progress-bar__trace">
+                                    <div class="progress-bar__background"></div>
+                                </div>
+
+                                <div class="progress-bar__icon first-icon">
+                                    <img src="/images/ranking/icon-bronze.png" style="width: 30px; margin-top: 15%;" alt="Hạng đồng" />
+                                    <span class="ranking-title">Hạng Đồng</span>
+                                </div>
+                                <div class="progress-bar__icon second-icon">
+                                    <img src="/images/ranking/icon-silver.png" style="width: 30px; margin-top: 15%;" alt="Hạng đồng" />
+                                    <span class="ranking-title">Hạng Bạc</span>
+                                </div>
+                                <div class="progress-bar__icon third-icon">
+                                    <img src="/images/ranking/icon-gold.png" style="width: 30px; margin-top: 15%;" alt="Hạng đồng" />
+                                    <span class="ranking-title">Hạng Vàng</span>
+                                </div>
+                                <div class="progress-bar__icon last-icon">
+                                    <img src="/images/ranking/icon-master.png" style="width: 30px; margin-top: 15%;" alt="Hạng đồng" />
+                                    <span class="ranking-title">Hạng Master</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="accordion-item">
+                                <div class="accordion-title active-title">
+                                    <h2 style="font-size:14px !important">
+                                        KẾT QUẢ THỰC ĐẠT 
+                                    </h2>
+                                </div>
+                                <div class="accordion-content active-title" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="primary ranking-title">75.000.000</p>
+                                                                <span>Chỉ số FYP thực đạt</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <i class="icon-bar-chart primary font-large-2 float-right icon-card"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="warning ranking-title">12</p>
+                                                                <span>Số hợp đồng thực đạt</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <i class="icon-docs warning font-large-2 float-right icon-card"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="success ranking-title">54 %</p>
+                                                                <span>Chỉ số K2 thực đạt</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <i class="icon-pie-chart success font-large-2 float-right icon-card"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="danger ranking-title">21</p>
+                                                                <span>Chỉ số Shinhan Lead thực đạt</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <i class="icon-user-following danger font-large-2 float-left icon-card"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="accordion-item">
+                                <div class="accordion-title active-title" >
+                                    <h2 style="font-size:14px !important">
+                                        CHỈ TIÊU HẠNG
+                                    </h2>
+                                </div>
+                                <div class="accordion-content  active-title" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="title-bronze ranking-title">Hạng Đồng</p>
+                                                                <span>Chỉ số FYP: 100.000.000</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/ranking/icon-bronze.png" class="icon-card-ranking" alt="Hạng đồng" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="title-silver ranking-title">Hạng Bạc</p>
+                                                                <span>Chỉ số FYP: 150.000.000</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/ranking/icon-silver.png" class="icon-card-ranking" alt="Hạng bạc" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="title-gold ranking-title">Hạng Vàng</p>
+                                                                <span>Chỉ số FYP: 200.000.000</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/ranking/icon-gold.png" class="icon-card-ranking" alt="Hạng vàng" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="title-master ranking-title">Hạng Master</p>
+                                                                <span>Chỉ số FYP: 250.000.000</span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/ranking/icon-master.png" class="icon-card-ranking" alt="Hạng master" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-112 col-lg-12 col-xl-12">
+                            <div class="accordion-item">
+                                <div class="accordion-title active-title" >
+                                    <h2 style="font-size:14px !important">
+                                        DANH SÁCH THÀNH VIÊN
+                                    </h2>
+                                </div>
+                                <div class="accordion-content  active-title" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Nguyễn Vũ Thiên Tú</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-silver">Bạc</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/3.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Cao Minh Ngọc</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-gold">Vàng</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/1.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Lê Trần Thái Khoa</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-master">Master</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/2.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Cao Toàn Nhân</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-gold">Vàng</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/1.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Trần Trường Long</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-bronze">Đồng</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/1.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Nguyễn Anh Dũng</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-silver">Bạc</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/3.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Ong Chấn Ích</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-gold">Vàng</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/1.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Lê Hồng Vũ</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-master">Master</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/2.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Thái Trường Phước</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-gold">Vàng</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/1.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Nguyễn Quốc Ảnh</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-bronze">Đồng</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/3.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Vũ Trường Giang</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-gold">Vàng</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/3.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                            <div class="card card-ranking">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="media d-flex">
+                                                            <div class="media-body text-left">
+                                                                <p class="ranking-title">Nguyễn Ngọc Chánh</p>
+                                                                <span>ID: <strong>213123123123</strong></span>
+                                                                <br />
+                                                                <span>Xếp hạng: <strong class="title-silver">Bạc</strong></span>
+                                                            </div>
+                                                            <div class="align-self-center">
+                                                                <img src="/images/avatar/2.png" class="rounded-circle" style="width: 2000px;" alt="Avatar" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress mt-1 mb-0" style="height: 7px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+@*                     <div class="row button-right-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit" onclick="onPopupChangePasswordClicked()">Thay đổi mật khẩu</button>
+                            <button class="btn btn-purple-style" type="submit">Cập nhật thông tin</button>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("PopupChangePassword")
+
+<script>
+    function onPopupChangePasswordClicked() {
+        var modal = document.getElementById("popupChangePassword");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(".accordion-title").click(function (e) {
+            var accordionitem = $(this).attr("data-tab");
+            $("#" + accordionitem).slideToggle();
+
+            //console.log(this);
+            var classItem = $(this).attr("class");
+            //console.log("classItem", classItem);
+            if (classItem == "accordion-title active-title") {
+                $("i.bi-arrow-up-circle", this).removeClass("bi-arrow-up-circle").toggleClass("bi-arrow-down-circle");
+                $(this).removeClass("active-title");
+            }
+            else {
+                $("i.bi-arrow-down-circle", this).toggleClass("bi-arrow-up-circle").removeClass("bi-arrow-down-circle");
+                $(this).toggleClass("active-title");
+            }
+        });
+
+    });
+</script>

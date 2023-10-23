@@ -1,0 +1,287 @@
+﻿@using AgencyWeb.Models
+@using AgencyWeb.Areas.BusinessIndicators.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<AgentController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Danh sách TVTC</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header card-control-filter">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    @(Html.DevExtreme().SelectBox().ID("cboHierarchy")
+                        //.DataSource(d => d.WebApi().Area("Functions").Controller("Product").LoadAction("GetPaymodeList"))
+                        //.DisplayExpr("PayModeName")
+                        //.ValueExpr("PayModeID")
+                        .SearchEnabled(true)
+                        .DisplayExpr("Name")
+                        .ValueExpr("Code")
+                        .Value("1")
+                        .DataSource(new object[] {
+                    new { Code = "1", Name = "Chanel"},
+                    new { Code = "2", Name = "Region"},
+                    new { Code = "3", Name = "Area"},
+                    new { Code = "4", Name = "Zone"},
+                    new { Code = "5", Name = "Team"},
+                    new { Code = "6", Name = "Unit"},
+                    new { Code = "7", Name = "Agent"},
+                        })
+                        )
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox().ID("boxAgentCode").OnValueChanged("SetValueAgentCode")
+                                    .Label("Mã số TVTC").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                                <input id="txtAgentCode" hidden />
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox().ID("boxFullName").OnValueChanged("SetValueFullName")
+                                    .Label("Tên TVTC").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                                <input id="txtFullName" hidden />
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox().ID("boxIdNumber").OnValueChanged("SetValueIdNumber")
+                                    .Label("CMND").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                                <input id="txtIdNumber" hidden />
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox().ID("boxPhone").OnValueChanged("SetValuePhone")
+                                    .Label("Điện thoại").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                                <input id="txtPhone" hidden />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row button-search-row">
+                        <div class="col-md-12">
+                            <button id="btnReset" class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện</button>
+                            <button id="btnSearch" class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridAgentList")
+                        .DataSource(d => d.WebApi()
+                        .Area("BusinessIndicators")
+                        .Controller("Agent")
+                        .LoadAction("GetAgentList")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridAgent")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(40).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-eye-open icon-grid" onclick="onViewAgentClicked()"></span>
+                            </text>);
+                            columns.Add().DataField(nameof(AgentModel.AgentCode)).Caption("Mã số TVTC").MinWidth(80);
+                            columns.Add().DataField(nameof(AgentModel.FullName)).Caption("Họ và tên").MinWidth(150);
+                            columns.Add().DataField(nameof(AgentModel.Hierarchy)).Caption("Chức danh").MinWidth(50);
+                            columns.Add().DataField(nameof(AgentModel.JoinDate)).Caption("Ngày gia nhập").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(AgentModel.Status)).Caption("Tình trạng hoạt động").Width(100);
+                            columns.Add().DataField(nameof(AgentModel.IdNumber)).Caption("CMND").Width(100);
+                            columns.Add().DataField(nameof(AgentModel.Birthday)).Caption("Ngày sinh").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(AgentModel.Gender)).Caption("Giới tính").Width(100);
+                            columns.Add().DataField(nameof(AgentModel.Phone)).Caption("Số điện thoại").Width(140);
+                            columns.Add().DataField(nameof(AgentModel.Email)).Caption("Email").Width(200);
+                            columns.Add().DataField(nameof(AgentModel.Address)).Caption("Địa chỉ").Width(200);
+                            columns.Add().DataField(nameof(AgentModel.ManagerCode)).Caption("Mã số Quản lý trực tiếp").Width(100);
+                            columns.Add().DataField(nameof(AgentModel.ManagerName)).Caption("Họ tên Quản lý trực tiếp").Width(100);
+                            columns.Add().DataField(nameof(AgentModel.Date01)).Caption("Ngày nghỉ việc gần nhất").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(AgentModel.Date02)).Caption("Ngày tái ký gần nhất").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(AgentModel.Date03)).Caption("Ngày thăng chức gần nhất").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(AgentModel.Date04)).Caption("Ngày giáng cấp gần nhất").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                        })
+                        .OnRowDblClick("onRowDblClickGridAgentList")
+                        .WordWrapEnabled(true)
+                        .ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(false))
+                        .HoverStateEnabled(true)
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(true)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        $(function () {
+            // Filter options.
+            var filterOptions = [
+                ["AgentCode", "contains", "txtAgentCode"],
+                ["FullName", "contains", "txtFullName"],
+                ["IdNumber", "contains", "txtIdNumber"],
+                ["Phone", "contains", "txtPhone"]
+            ];
+
+            // Action button.
+            var btnSearch = "btnSearch";
+            var btnReset = "btnReset";
+            var grdData = "gridAgentList";
+
+            // Get datagrid.
+            function getDataGrid() {
+                // Get data grid.
+                return $("#" + grdData).dxDataGrid("instance");
+            }
+            // Get filter data.
+            function getFilterData() {
+                var filters = [];
+                // var val1 = $("#fromDate").dxDateBox("instance").option('value');
+                // var val2 = $("#toDate").dxDateBox("instance").option('value');
+                // if (val1 !== "" && val1 !== null && val2 !== "" && val2 !== null) {
+                //     filters.push([
+                //         ["CreationDate", ">=", val1],
+                //         "and",
+                //         ["CreationDate", "<=", val2]
+                //     ]);
+                // }
+                // else {
+                //     if (val1 !== "" && val1 !== null) {
+                //         filters.push(["CreationDate", ">=", val1]);
+                //     }
+
+                //     if (val2 !== "" && val2 !== null) {
+                //         filters.push(["CreationDate", "<=", val2]);
+                //     }
+                // }
+                for (var i = 0; i < filterOptions.length; i++) {
+                    // Get filter value.
+                    var val = $("#" + filterOptions[i][2]).val();
+                    if (val !== "") {
+                        // Store filter data.
+                        filters.push([filterOptions[i][0], filterOptions[i][1], val]);
+                    }
+                }
+                return filters;
+            }
+
+
+            //=============Search Function==============
+            function search() {
+
+                // Get data grid.
+                var dataGrid = getDataGrid();
+
+                // Get filter data.
+                var filterParams = getFilterData();
+
+                if (filterParams.length > 0) dataGrid.filter(filterParams);
+                else dataGrid.clearFilter();
+
+            }
+
+            //=============Reset Searchbox Function==============
+            function reset() {
+
+                // Reset filter value.
+                resetSearchParams();
+
+                // Initialize datagrid.
+                var dataGrid = getDataGrid();
+                dataGrid.clearFilter();
+
+            }
+
+            // Reset filer method.
+            function resetSearchParams() {
+                $("#boxAgentCode").dxTextBox("instance").option('value', null);
+                $("#boxFullName").dxTextBox("instance").option('value', null);
+                $("#boxIdNumber").dxTextBox("instance").option('value', null);
+                $("#boxPhone").dxTextBox("instance").option('value', null);
+            }
+
+            // On button search click.
+            $("#" + btnSearch).click(function () {
+                search();
+            });
+
+            // On button reset click.
+            $("#" + btnReset).click(function () {
+                reset();
+            });
+        });
+    })();
+
+    function SetValueAgentCode() {
+        var value = $("#boxAgentCode").dxTextBox('instance').option('value');
+        $('#txtAgentCode').val(value);
+    }
+    function SetValueFullName() {
+        var value = $("#boxFullName").dxTextBox('instance').option('value');
+        $('#txtFullName').val(value);
+    }
+    function SetValueIdNumber() {
+        var value = $("#boxIdNumber").dxTextBox('instance').option('value');
+        $('#txtIdNumber').val(value);
+    }
+    function SetValuePhone() {
+        var value = $("#boxPhone").dxTextBox('instance').option('value');
+        $('#txtPhone').val(value);
+    }
+
+    function onViewAgentClicked() {
+        window.location.href = '@Url.Action("AgentDetail", "Agent", new { Area = "BusinessIndicators", id = "PARAMETER_ID" })'.replace(/PARAMETER_ID/g, id);
+    }
+
+    function onRowDblClickGridAgentList() {
+        location.href = '@Url.Action("AgentDetail", "Agent", new { area = "BusinessIndicators" })';
+    }
+
+    function exportingGridAgent(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Agent');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'AgentList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+

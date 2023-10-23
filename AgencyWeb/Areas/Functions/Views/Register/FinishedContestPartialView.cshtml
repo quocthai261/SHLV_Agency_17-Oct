@@ -1,0 +1,103 @@
+﻿@model ContestGeneral
+
+<div class="row pb-3">
+    @foreach (var contest in Model.FinishedContest)
+    {
+        <div class="col-lg-4 col-sm-4">
+            <div class="row p-2">
+                <div class="col-12 p-1">
+                    <div class="card border-0 p-3 shadow border-top border-5 rounded" style="border-color: #425F4B !important; background-color: #F0F0F2; min-height: 250px">
+                        <div class="card-body pb-0">
+                            <div class="row">
+                                <div class="col-1">
+                                    @* <div class="media-style">
+                                <div class="countdown">
+                                <div class="overlap-group">
+                                <div class="ellipse"></div>
+                                <div class="div"></div>
+                                <div class="text-wrapper">Kết thúc</div>
+                                </div>
+                                </div>
+                                </div> *@
+                                    <div class="media-style">
+                                        <div class="countdown-infuture">
+                                            <div class="overlap-group-infuture">
+                                                <img class="ellipse-infuture" />
+                                                <div class="circle"></div>
+                                                <div class="div-infuture"></div>
+                                                <div class="ellipse-2"></div>
+                                                <p class="element-ng-y">
+                                                    <span class="text-wrapper-infuture">@contest.ExpireAfter<br /></span> <span class="span">Giờ</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-11">
+                                    <div style="margin-left: 90px">
+                                        <p class="card-title h5 text-dark opacity-75 text-uppercase text-center"
+                                           style="color: #725dcf !important; word-wrap: break-word; font-size: 12px !important"><b>@contest.ContestName</b></p>
+                                        <p class="card-title text-warning text-center" style="color: #725dcf !important">@contest.ContestCode</p>
+                                    </div>
+                                    <div style="margin-left: 90px">
+                                        <p class="text-dark text-opacity-75 text-center">
+                                            Thi đua kết thúc sau:<br>
+                                            <span><b>@contest.ExpireAfter</b></span> <span>Giờ</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a asp-action=""
+                               asp-route-contestId=""
+                               class="btn btn-primary bg-gradient border-0 form-control" style="background-color: #725dcf!important">
+                                @contest.Status
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@* <div class="card-body py-3">
+    @(Html.DevExtreme().DataGrid()
+            .ID("gridNewContestList")
+            .DataSource(d => d.WebApi()
+            .Area("Functions")
+            .Controller("Register")
+        .LoadAction("GetFinishedContestList")
+            )
+            .ShowBorders(true)
+            .Columns(columns =>
+            {
+            columns.Add().DataField(nameof(FinishedContestDto.ContestId)).Visible(false);
+            columns.Add().DataField(nameof(FinishedContestDto.ContestCode)).Caption("Mã thi đua");
+            columns.Add().DataField(nameof(FinishedContestDto.ContestName)).Caption("Tên thi đua");
+            columns.Add().DataField(nameof(FinishedContestDto.RegisterDate)).Caption("Ngày đăng ký").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center);
+            columns.Add().DataField(nameof(HappeningContestDto.ExpireAfter)).Caption("Kết thúc sau");
+            columns.Add().DataField(nameof(FinishedContestDto.Status)).Width(150);
+        })
+        .ColumnHidingEnabled(true)
+        .AllowColumnResizing(true)
+        .ColumnAutoWidth(true)
+        .ColumnMinWidth(50)
+        .ShowRowLines(true)
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(f => f.Visible(false))
+        .GroupPanel(p => p.Visible(false))
+        .Grouping(g => g.AutoExpandAll(false))
+        .RemoteOperations(false)
+        .Paging(paging => paging.PageSize(5))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+            pager.ShowInfo(true);
+        })
+        )
+</div> *@

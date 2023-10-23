@@ -1,0 +1,59 @@
+﻿@model TreeMenuItem<SiteMapNode>
+@using AgencyWeb.Common.Extensions;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer ViewLocalizer
+
+@{
+    // var id = Model.Item.ID;
+    // var content = @ViewLocalizer[Model.Item.CONTENT];
+    // var iconClass = Model.Item.ICONCLASS;
+    // var url = Model.Item.URL_;
+    // var activeMenuItemSystemName = Model.CurrentSystemName;
+    // var isDisplay = Model.Item.ISACTIVE && Model.Item.ISDISPLAY;
+    // var hasChilds = Model.Children != null && Model.Children.Any();
+    // var isActive = Model.ContainsSystemName(activeMenuItemSystemName);
+    // var isActiveParent = Model.ContainsParentSystemName(activeParentMenu);
+    string urlCurrent = Context.Request.Path;
+    var lstContentUrlCurrent = urlCurrent.Split('/');
+    var id = Model.Item.ID;
+    var content = @ViewLocalizer[Model.Item.CONTENT];
+    var iconClass = Model.Item.ICONCLASS;
+    var url = Model.Item.URL_;
+    var activeMenuItemSystemName = lstContentUrlCurrent.Count() > 2 ? lstContentUrlCurrent[2] : ""; //agent
+    var activeParentMenu = lstContentUrlCurrent.Count() > 2 ? lstContentUrlCurrent[1] : ""; // business indicator
+
+    var isDisplay = Model.Item.ISACTIVE && Model.Item.ISDISPLAY;
+    var hasChilds = Model.Children != null && Model.Children.Any();
+    var isActive = Model.ContainsSystemName(activeMenuItemSystemName); //agent
+    var isActiveParent = Model.ContainsParentSystemName(activeParentMenu);//business indicator
+}
+
+@if (isDisplay)
+{
+    <li>
+        @if (hasChilds)
+        {
+            <a @(isActiveParent ? Html.Raw("class=\"active\"") : Html.Raw("class=\"collapsed\"")) data-toggle="collapse" data-target="#ServiceNavbar_@id">
+                <i class="@iconClass main-color"></i>&nbsp;
+                @content
+                <i class="fa fa-caret-up main-color"></i>
+            </a>
+            <div @(isActiveParent ? Html.Raw("class=\"collapse in\"") : Html.Raw("class=\"collapse\"")) id="ServiceNavbar_@id">
+                <ul>
+                    @foreach (var item in Model.Children)
+                    {
+                        item.CurrentSystemName = activeMenuItemSystemName;
+                        @await Html.PartialAsync("_MenuItem", item)
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            <a href="@Url.Content("~/" + url)" @(isActive ? Html.Raw("class=\"active\"") : null)>
+                <i class="@iconClass main-color"></i>&nbsp;
+                @content
+            </a>
+        }
+    </li>
+}

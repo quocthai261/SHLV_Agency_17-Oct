@@ -1,0 +1,206 @@
+﻿@using AgencyWeb.Areas.BusinessIndicators.Models;
+@using AgencyWeb.Models
+@using AgencyWeb.Areas.BusinessIndicators.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<DailySalesReportController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Báo cáo kinh doanh ngày</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header  card-control-filter">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    @(Html.DevExtreme().SelectBox().ID("cboHierarchy")
+                        //.DataSource(d => d.WebApi().Area("Functions").Controller("Product").LoadAction("GetPaymodeList"))
+                        //.DisplayExpr("PayModeName")
+                        //.ValueExpr("PayModeID")
+                        .SearchEnabled(true)
+                        .DisplayExpr("Name")
+                        .ValueExpr("Code")
+                        .Value("1")
+                        .DataSource(new object[] {
+                    new { Code = "1", Name = "Chanel"},
+                    new { Code = "2", Name = "Region"},
+                    new { Code = "3", Name = "Area"},
+                    new { Code = "4", Name = "Zone"},
+                    new { Code = "5", Name = "Team"},
+                    new { Code = "6", Name = "Unit"},
+                    new { Code = "7", Name = "Candidate"},
+                        })
+                        )
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Họ tên TVTC").LabelMode(EditorLabelMode.Floating).ShowClearButton(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("mm/yyyy")
+                                    .Label("Tháng kinh doanh").LabelMode(EditorLabelMode.Floating).ShowClearButton(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="row button-search-row">
+                            <div class="col-md-12">
+                                <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện</button>
+                                <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().PivotGrid<DailySalesReportDto>()
+                        .ID("pivotGridDailySaleReport")
+                        .DataFieldArea(PivotGridDataFieldArea.Column)
+                        .RowHeaderLayout(PivotGridRowHeadersLayout.Standard)
+                        .Export(e => e.Enabled(true))
+                        .OnExporting("onExportingDailySaleReport")
+                        .AllowSortingBySummary(false)
+                        .AllowSorting(false)
+                        .AllowFiltering(false)
+                        .ShowBorders(true)
+                        .ShowColumnGrandTotals(true)
+                        .ShowRowGrandTotals(true)
+                        .ShowColumnTotals(true)
+                        .ShowRowTotals(true)
+                        .Height(490)
+                        .FieldPanel(p => p
+                        .ShowColumnFields(false)
+                        .ShowDataFields(false)
+                        .ShowFilterFields(false)
+                        .ShowRowFields(true)
+                        .AllowFieldDragging(false)
+                        .Visible(true)
+                        )
+                        .FieldChooser(c => c.Enabled(false))
+                        .AllowExpandAll(true)
+                        .Height(600)
+                        .DataSource(p => p
+                        .Store(s => s.WebApi().Area("BusinessIndicators").Controller("DailySalesReport").LoadAction("GetList")
+                        .Key("DailySaleReportId"))
+                        .Fields(fields =>
+                        {
+                            fields.AddFor(m => m.TypeName)
+                            .Caption("Channel")
+                            .Area(PivotGridArea.Row).Expanded(true).AllowExpandAll(false).AllowFiltering(false).AllowSorting(true).Width(150);
+
+                            fields.AddFor(m => m.Date)
+                            .Area(PivotGridArea.Column).DataType(PivotGridDataType.String).CustomizeText("customizeHeaderText");
+
+                            fields.AddFor(m => m.Amount)
+                            .Caption("Amount")
+                            .Format(t => t.Type(Format.FixedPoint).Precision(0))
+                            .Area(PivotGridArea.Data).DataType(PivotGridDataType.Number).SummaryType(SummaryType.Sum);
+                        })
+                        )
+                        .OnCellPrepared("onCellPrepared")
+                        .OnCellClick("onCellClick")
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onExportingDailySaleReport(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Sales');
+
+        DevExpress.excelExporter.exportPivotGrid({
+            component: e.component,
+            worksheet: worksheet
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DailySaleReport.xlsx');
+            });
+        });
+    }
+
+    function onCellPrepared(e) {
+        if (e.area === "row") {
+            if (e.columnIndex === 0) {
+                e.cellElement.find('div').remove();
+            }
+            else if (e.columnIndex === 1) {
+                e.cellElement.find('div').remove();
+                e.cellElement.css("text-align", "right");
+            }
+            else if (e.columnIndex === 2) {
+                e.cellElement.prepend(
+                    $("<div>")
+                        .dxCheckBox({
+                            value: e.cell.text === "true" ? true : false,
+                            readOnly: true
+                        })
+                        .addClass("my-check-box")
+                );
+                e.cellElement.css("text-align", "center");
+                e.cellElement.find('span').text('');
+            }
+        }
+
+        if (e.rowIndex % 2 == 1) {
+            e.cellElement.css("background-color", "#f8f8f8");
+        }
+
+        if (e.cell.value < 0) {
+            e.cellElement.css("color", "red");
+            e.cellElement.css("font-weight", "900");
+        }
+    }
+
+    function onCellClick(e) {
+        e.cancel = true;
+    }
+
+    function customizeHeaderText(cellInfo) {
+        var date = new Date(cellInfo.valueText);
+
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    }
+
+    function contextMenu_preparing(e) {
+        console.log(e);
+        debugger;
+    }
+
+    function exportingGrid(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('DailySalesReport');
+
+        DevExpress.excelExporter.exportPivotGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DailySalesReportList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+

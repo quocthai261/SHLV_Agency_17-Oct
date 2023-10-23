@@ -1,0 +1,274 @@
+﻿@using AgencyWeb.Areas.BusinessIndicators.Models;
+@using AgencyWeb.Areas.Functions.Controllers;
+@using AgencyWeb.Models
+@using AgencyWeb.Areas.BusinessIndicators.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<ClaimReportDto> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Danh sách yêu cầu giải quyết quyền lợi bảo hiểm</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header  card-control-filter">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    @(Html.DevExtreme().SelectBox().ID("cboHierarchy")
+                        //.DataSource(d => d.WebApi().Area("Functions").Controller("Product").LoadAction("GetPaymodeList"))
+                        //.DisplayExpr("PayModeName")
+                        //.ValueExpr("PayModeID")
+                        .SearchEnabled(true)
+                        .DisplayExpr("Name")
+                        .ValueExpr("Code")
+                        .Value("1")
+                        .DataSource(new object[] {
+                    new { Code = "1", Name = "Chanel"},
+                    new { Code = "2", Name = "Region"},
+                    new { Code = "3", Name = "Area"},
+                    new { Code = "4", Name = "Zone"},
+                    new { Code = "5", Name = "Team"},
+                    new { Code = "6", Name = "Unit"},
+                    new { Code = "7", Name = "Candidate"},
+                        })
+                        )
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().SelectBox()
+                                    .Label("Tình trạng yêu cầu")
+                                    .SearchEnabled(true)
+                                    .DisplayExpr("Name")
+                                    .ValueExpr("Code")
+                                    .Value("1")
+                                    .DataSource(new object[] {
+                                new { Code = "1", Name = "Chờ xem xét"},
+                                new { Code = "2", Name = "Chờ Bổ sung thông tin"},
+                                new { Code = "3", Name = "Chờ công ty thu thập thêm thông tin"},
+                                new { Code = "4", Name = "Từ chối chi trả"},
+                                new { Code = "5", Name = "Mời khám Y Tế"},
+                                new { Code = "6", Name = "Chấp nhận chi trả"},
+                                new { Code = "7", Name = "Chờ đánh giá tình trạng thương tật"},
+                                new { Code = "8", Name = "Đóng hồ sơ (do quá hạn bổ sung thông tin)"},
+                                    })
+                                    )
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Số yêu cầu QLBH").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Hợp đồng").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Mã số TVTC").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Họ tên TVTC").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Từ ngày yêu cầu QLBH")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("fromDate")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .LabelMode(EditorLabelMode.Floating)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Đến ngày yêu cầu QLBH")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("toDate")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .LabelMode(EditorLabelMode.Floating)
+                                    )
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Từ ngày quyết định")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("fromDate")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .LabelMode(EditorLabelMode.Floating)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Đến ngày quyết định")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("toDate")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .LabelMode(EditorLabelMode.Floating)
+                                    )
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Từ ngày xảy ra sự kiện bảo hiểm")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("fromDate")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .LabelMode(EditorLabelMode.Floating)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Label("Đến ngày xảy ra sự kiện bảo hiểm")
+                                    .Type(DateBoxType.Date)
+                                    //.ID("toDate")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .LabelMode(EditorLabelMode.Floating)
+                                    )
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row button-search-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện</button>
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(
+                            Html.DevExtreme().DataGrid()
+                            .ID("gridList")
+                            .DataSource(d => d.WebApi()
+                            .Area("Functions")
+                            .Controller("ClaimReport")
+                            .LoadAction("GetList")
+                            .Key("ClaimReportId")
+                            )
+                            .ShowBorders(true)
+                            .Selection(s => s.Mode(SelectionMode.Single))
+                            .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGrid")
+                            .Columns(columns =>
+                            {
+                                columns.Add().Caption("").Width(40)
+                            .DataField(nameof(ClaimReportDto.ClaimReportId))
+                            .CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-eye-open icon-grid" onclick='onViewClicked("<%= value %>")'></span>
+                            </text>);
+
+                                columns.Add().DataField(nameof(ClaimReportDto.ClaimReportId)).Visible(false);
+
+                                columns.Add().DataField(nameof(ClaimReportDto.Policy)).Caption("Hợp đồng bảo hiểm").Width(120);
+                                columns.Add().DataField(nameof(ClaimReportDto.ClaimNumber)).Caption("Số yêu cầu QLBH").Width(120);
+                                columns.Add().DataField(nameof(ClaimReportDto.LifeAssured)).Caption("Người được bảo hiểm").Width(120);
+                                columns.Add().DataField(nameof(ClaimReportDto.ClaimBenefit)).Caption("Quyền lợi bảo hiểm").Width(120);
+                                columns.Add().DataField(nameof(ClaimReportDto.EventDate)).Caption("Ngày xảy ra sự kiện bảo hiểm")
+                                    .DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+
+                                columns.Add().DataField(nameof(ClaimReportDto.ClaimApprovedAmount)).Caption("Số tiền chấp nhận chi trả")
+                                    .Format(Format.FixedPoint).Width(120);
+                                columns.Add().DataField(nameof(ClaimReportDto.ClaimStatus)).Caption("Tình trạng yêu cầu QLBH").Width(120);
+                                columns.Add().DataField(nameof(ClaimReportDto.Notification)).Caption("Thư thông báo").Width(120);
+
+                                columns.Add().DataField(nameof(ClaimReportDto.DateOfClaimSubmission)).Caption("Ngày yêu cầu QLBH")
+                                    .DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                                columns.Add().DataField(nameof(ClaimReportDto.DateOfSupplementingDocuments)).Caption("Ngày bổ sung thông tin")
+                                    .DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+                                columns.Add().DataField(nameof(ClaimReportDto.DateOfDecision)).Caption("Ngày ra quyết định")
+                                    .DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy").Alignment(HorizontalAlignment.Center).Width(150);
+
+                                columns.Add().DataField(nameof(ClaimReportDto.Agent)).Caption("TVTC").MinWidth(150);
+
+                            })
+                        //.OnRowDblClick("onRowDblClickGridAgentList")
+                        .WordWrapEnabled(true)
+                        .ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onViewClicked(id) {
+        window.location.href = '@Url.Action("Detail", "ClaimReport", new { Area = "Functions", id = "PARAMETER_ID" })'.replace(/PARAMETER_ID/g, id);
+    }
+
+    function exportingGrid(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ClaimReport');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'ClaimReportList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+

@@ -1,0 +1,574 @@
+﻿<style>
+    :root {
+        --blue: #0dcaf0;
+        --green: #60b060;
+        --pink: #d9534f;
+        --yellow: #f39c12;
+    }
+
+    .radius-10 {
+        border-radius: 10px !important;
+    }
+
+    .border-info {
+        border-left: 5px solid var(--blue) !important;
+    }
+
+    .border-danger {
+        border-left: 5px solid var(--green) !important;
+    }
+
+    .border-success {
+        border-left: 5px solid var(--pink) !important;
+    }
+
+    .border-warning {
+        border-left: 5px solid var(--yellow) !important;
+    }
+
+    .context-status-new, .border-info .percent_text {
+        color: var(--blue) !important;
+    }
+
+    .context-status-joined, .border-danger .percent_text {
+        color: var(--green) !important;
+    }
+
+    .context-status-success, .border-success .percent_text {
+        color: var(--pink) !important;
+    }
+
+    .context-status-finished, .border-warning .percent_text {
+        color: var(--yellow) !important;
+    }
+
+    .border-info .round_per, .border-info .percent_more:after {
+        background: var(--blue) !important;
+    }
+
+    .border-danger .round_per, .border-danger .percent_more:after {
+        background: var(--green) !important;
+    }
+
+    .border-success .round_per, .border-success .percent_more:after {
+        background: var(--pink) !important;
+    }
+
+    .border-warning .round_per, .border-warning .percent_more:after {
+        background: var(--yellow) !important;
+    }
+
+    .card-grid {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0px solid rgba(0, 0, 0, 0);
+        border-radius: .25rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 0 0.875rem 0 rgba(33,37,41,.05);
+        margin: 15px 0px;
+    }
+
+        .card-grid:hover {
+            box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
+        }
+
+    .widgets-icons-2 {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ededed;
+        font-size: 27px;
+        border-radius: 10px;
+    }
+
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .text-white {
+        color: #fff !important;
+    }
+
+    .ms-auto {
+        margin-left: auto !important;
+    }
+
+    .box {
+        width: 100%;
+        height: 100%;
+    }
+
+        .box .chart {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            font-size: 40px;
+            line-height: 160px;
+            color: #fff;
+            min-height: 100%;
+        }
+
+        .box canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            width: 100%;
+        }
+
+</style>
+
+<div class="container-fluid p-0">
+    <div class="row search-panel-form">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+            <div style="margin-top: 0.65rem">
+                @(Html.DevExtreme().SelectBox().ID("ContestType")
+                    //.DataSource(d => d.WebApi().Area("Management").Controller("Product").LoadAction("GetPaymodeList"))
+                    .Placeholder("Chọn")
+                    .SearchEnabled(true)
+                    .DisplayExpr("Name")
+                    .ValueExpr("Code")
+                    .Value("1")
+                    .DataSource(new object[] {
+                new { Code = "1", Name = "Tất cả thi đua"},
+                new { Code = "2", Name = "Thi đua đang diễn ra"},
+                new { Code = "3", Name = "Thi đua đã đăng ký"},
+                new { Code = "4", Name = "Thi đua đã kết thúc"},
+                    })
+                    )
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+            <div class="searchBar">
+                <input id="searchQueryInput" type="text" name="searchQueryInput" placeholder="Search" />
+                <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="#666666" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-info" style="cursor:pointer" onclick="onViewNewContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-new">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Đăng ký kết thúc sau 12 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-new">Chưa diễn ra</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
+                            <div class="circle_percent" data-percent="0">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-danger" style="cursor:pointer" onclick="onViewJoinedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-joined">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc thi kết thúc sau 16 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-joined">Đang tham gia</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                            <div class="circle_percent" data-percent="65">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-success" style="cursor:pointer" onclick="onViewRegisteredContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-success">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc bắt đầu sau 2 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-success">Đã đăng ký</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
+                            <div class="circle_percent" data-percent="0">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-warning" style="cursor:pointer" onclick="onViewFinishedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-finished">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Kết thúc ngày: 09/10/2023</p>
+
+                            <p class="mb-0 font-13 context-status-finished">Đã kết thúc</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto">
+                            <div class="circle_percent" data-percent="100">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-success" style="cursor:pointer" onclick="onViewRegisteredContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-success">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc bắt đầu sau 2 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-success">Đã đăng ký</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
+                            <div class="circle_percent" data-percent="0">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-warning" style="cursor:pointer" onclick="onViewFinishedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-finished">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Kết thúc ngày: 09/10/2023</p>
+
+                            <p class="mb-0 font-13 context-status-finished">Đã kết thúc</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto">
+                            <div class="circle_percent" data-percent="100">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-danger" style="cursor:pointer" onclick="onViewJoinedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-joined">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc thi kết thúc sau 16 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-joined">Đang tham gia</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                            <div class="circle_percent" data-percent="30">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-info" style="cursor:pointer" onclick="onViewNewContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-new">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Đăng ký kết thúc sau 12 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-new">Chưa diễn ra</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
+                            <div class="circle_percent" data-percent="0">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-danger" style="cursor:pointer" onclick="onViewJoinedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-joined">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc thi kết thúc sau 16 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-joined">Đang tham gia</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                            <div class="circle_percent" data-percent="62">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-success" style="cursor:pointer" onclick="onViewRegisteredContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-success">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc bắt đầu sau 2 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-success">Đã đăng ký</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
+                            <div class="circle_percent" data-percent="0">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-info" style="cursor:pointer" onclick="onViewNewContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-new">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Đăng ký kết thúc sau 12 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-new">Chưa diễn ra</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
+                            <div class="circle_percent" data-percent="0">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-danger" style="cursor:pointer" onclick="onViewJoinedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-joined">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc thi kết thúc sau 16 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-joined">Đang tham gia</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                            <div class="circle_percent" data-percent="90">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-warning" style="cursor:pointer" onclick="onViewFinishedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-finished">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Kết thúc ngày: 09/10/2023</p>
+
+                            <p class="mb-0 font-13 context-status-finished">Đã kết thúc</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto">
+                            <div class="circle_percent" data-percent="100">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-danger" style="cursor:pointer" onclick="onViewJoinedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-joined">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc thi kết thúc sau 16 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-joined">Đang tham gia</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                            <div class="circle_percent" data-percent="70">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-info" style="cursor:pointer" onclick="onViewNewContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-new">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Đăng ký kết thúc sau 12 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-new">Chưa diễn ra</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
+                            <div class="circle_percent" data-percent="0">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="card card-grid radius-10 border-start border-0 border-3 border-danger" style="cursor:pointer" onclick="onViewJoinedContest()">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h4 class="my-1 text-info context-status-joined">Cuộc thi quyền lợi Agency 2023</h4>
+                            <p class="mb-0 text-secondary">Mã cuộc thi: b8lznt9d4</p>
+                            <p class="mb-0 text-secondary">Cuộc thi kết thúc sau 16 giờ</p>
+
+                            <p class="mb-0 font-13 context-status-joined">Đang tham gia</p>
+                        </div>
+                        <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                            <div class="circle_percent" data-percent="80">
+                                <div class="circle_inner">
+                                    <div class="round_per"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("PopupViewContestNew")
+@await Html.PartialAsync("PopupViewContestJoined")
+@await Html.PartialAsync("PopupViewContestFinished")
+@await Html.PartialAsync("PopupViewContestRegistered")
+@await Html.PartialAsync("PopupViewContestChoose")
+
+<script>
+    function onViewNewContest() {
+        var modal = document.getElementById("popupViewContestNew");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+        
+    function onViewJoinedContest() {
+        var modal = document.getElementById("popupViewContestJoined");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onViewFinishedContest() {
+        var modal = document.getElementById("popupViewContestFinished");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+    
+    function onViewRegisteredContest() {
+        var modal = document.getElementById("popupViewContestRegistered");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    $(".circle_percent").each(function () {
+        var $this = $(this),
+            $dataV = $this.data("percent"),
+            $dataDeg = $dataV * 3.6,
+            $round = $this.find(".round_per");
+        $round.css("transform", "rotate(" + parseInt($dataDeg + 180) + "deg)");
+        $this.append('<div class="circle_inbox"><span class="percent_text"></span></div>');
+        $this.prop('Counter', 0).animate({ Counter: $dataV },
+            {
+                duration: 2000,
+                easing: 'swing',
+                step: function (now) {
+                    $this.find(".percent_text").text(Math.ceil(now) + "%");
+                }
+            });
+        if ($dataV >= 51) {
+            $round.css("transform", "rotate(" + 360 + "deg)");
+            setTimeout(function () {
+                $this.addClass("percent_more");
+            }, 0);
+            setTimeout(function () {
+                $round.css("transform", "rotate(" + parseInt($dataDeg + 180) + "deg)");
+            }, 0);
+        }
+    });
+
+</script>

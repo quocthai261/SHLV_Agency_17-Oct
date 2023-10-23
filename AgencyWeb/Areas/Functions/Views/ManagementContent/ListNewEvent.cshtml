@@ -1,0 +1,64 @@
+﻿@using AgencyWeb.Models
+@using AgencyWeb.Areas.Functions.Controllers
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Danh sách bài viết tin tức</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridNewEventList")
+                        .DataSource(d => d.WebApi()
+                        .Area("Functions")
+                        .Controller("ManagementContent")
+                        .LoadAction("GetNewEventPostList")
+                        .Key("Id")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(90).DataField(nameof(RegisterDetailDto.Id)).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-eye-open icon-grid" onclick='onViewClicked("<%= value %>")' title="Xem"></span>
+                                <span class="glyphicon glyphicon-edit icon-grid" onclick='onEditNewEventPostClicked("<%= value %>")' title="Sửa"></span>
+                                <span class="glyphicon glyphicon-trash icon-grid" title="Xóa"></span>
+                            </text>);
+                            columns.Add().DataField(nameof(RegisterDetailDto.Id)).Visible(false);
+                            columns.Add().DataField(nameof(RegisterDetailDto.Title)).Caption("Tiêu đề bài viết");
+                            columns.Add().DataField(nameof(RegisterDetailDto.CreationDate)).Caption("Ngày tạo").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(RegisterDetailDto.LastUpdatedDate)).Caption("Ngày cập nhật").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                        })
+                        .ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(5))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onViewClicked(id) {
+        window.location.href = '@Url.Action("ViewDetailNewEvent", "ManagementContent", new { Area = "Functions", id = "PARAMETER_ID" })'.replace(/PARAMETER_ID/g, id);
+    }
+
+    function onEditNewEventPostClicked(id) {
+        window.location.href = '@Url.Action("UpsertNewEvent", "ManagementContent", new { Area = "Functions", id = "PARAMETER_ID" })'.replace(/PARAMETER_ID/g, id);
+    }
+</script>

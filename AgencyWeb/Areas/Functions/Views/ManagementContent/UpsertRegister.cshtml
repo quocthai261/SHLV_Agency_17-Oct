@@ -1,0 +1,62 @@
+﻿@model RegisterDetailDto
+
+@{
+    ViewData["Title"] = "Thêm mới bài viết";
+}
+
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header  card-control-filter">
+                    <h5 class="card-title mb-0">@(Model.Id != 0 ? "Cập nhật bài viết" : "Thêm mới bài viết")</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        <input asp-for="Id" hidden />
+                        <div class="row">
+                            <div class="col-12">
+                                <div asp-validation-summary="ModelOnly"></div>
+                                @* <div class="form-floating py-2 col-12">
+                                <input asp-for="Title" class="form-control border-0 shadow" />
+                                <label asp-for="Title" class="ms-2"></label>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                                </div> *@
+                                <div class="form-floating py-2 col-12">
+                                    @(Html.DevExtreme().TextBox().ID("Title")
+                                        .Label("Tiêu đề bài viết").LabelMode(EditorLabelMode.Floating)
+                                        .MaxLength(200).ShowClearButton(true).Value(@Model.Title))
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+                                <div class="py-2 col-12">
+                                    <label asp-for="Content" class="form-title">Nội dung bài viết</label>
+                                    <textarea asp-for="Content" class="form-control border-0 shadow"></textarea>
+                                    <span asp-validation-for="Content" class="text-danger"></span>
+                                </div>
+                                <div class="row button-right-row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-purple-style" type="submit"><i class="bi bi-check"></i> Lưu bài viết</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace('Content', {
+            heigh: 900,
+            filebrowserUploadUrl: '/Functions/ManagementContent/UploadImage',
+            filebrowserBrowseUrl: '/Functions/ManagementContent/UploadExplorer'
+        })
+    })
+</script>
+
+

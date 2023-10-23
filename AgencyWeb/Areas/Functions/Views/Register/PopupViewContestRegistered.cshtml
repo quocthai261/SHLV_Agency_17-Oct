@@ -1,0 +1,43 @@
+﻿<div class="modal fade" id="popupViewContestRegistered" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%;margin-top: 100px; overflow-x: auto">
+            <div class="card card-contest">
+                <img src="../images/contest/image01.png" class="card-detail-contest" alt="...">
+                <div class="card-body card-body-contest">
+                    <h4 class="card-title-contest context-status-registered">Cuộc thi quyền lợi Agency 2023</h4>
+                    <p class="card-text-contest">
+                        Chương trình khuyến mãi áp dụng cho đơn hàng trên 5 triệu đồng. Áp dụng với hệ thống Điện máy xanh trên toàn quốc. Khi sở hữu PMH gia dụng của Điện máy XANH, khách hàng có thể dùng để mua hàng online (thông qua tổng đài) hoặc tại siêu thị.
+                        PMH có dạng dãy số xuất kèm trên hoá đơn mua hàng của khách hàng. Thu ngân hoặc bộ phận Call Center sử dụng mã nhập vào đơn hàng để áp dụng khuyến mãi cho khách.
+                    </p>
+                    
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 button-right-row">
+                    <button id="btnRegisterContest" onclick="onButtonSaveViewContestRegisteredClicked()" type="button" class="btn btn-purple-style">
+                        Hủy đăng ký
+                    </button>
+                    <button id="btnSaveAddRider" onclick="onButtonCloseViewContestRegisteredClicked()" type="button" class="btn btn-purple-style">
+                        Thoát
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onButtonSaveViewContestRegisteredClicked() {
+        var modal = document.getElementById("popupViewContestRegistered");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Hủy đăng ký thành công", "success");
+    }
+
+    function onButtonCloseViewContestRegisteredClicked() {
+        var modal = document.getElementById("popupViewContestRegistered");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+</script>

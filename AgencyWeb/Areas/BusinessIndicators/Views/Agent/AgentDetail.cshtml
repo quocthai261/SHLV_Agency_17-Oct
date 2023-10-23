@@ -1,0 +1,267 @@
+﻿@using AgencyWeb.Models
+@using AgencyWeb.Areas.Account.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+<style>
+    .dx-row.dx-column-lines.dx-header-row {
+        background-color: var(--white-color);
+    }
+
+    .dx-header-row > td > .dx-datagrid-text-content {
+        color: var(--purple-color);
+    }
+</style>
+
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Thông tin cá nhân</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="form-group" style="display: flex;">
+                                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" style="width: 60px;" alt="Avatar" />
+                                <div style="padding: 0px 10px;">
+                                    <h4><strong>Vũ Trường Giang</strong></h4>
+                                    <p>Tư vấn viên tiềm năng</p>
+                                </div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress" id="progress_step_path"></div>
+                                <ul class="step-progress">
+                                    <li class="step"><span class="circle2"></span><span class="text">Kênh - Tired Agency</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">Territery - South</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">Miền - Hồ Chí Minh 1</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">Miền - Hồ Chí Minh 5</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">Văn phòng - Văn phòng Đinh Tiên Hoàng</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">Khu vực - Solar Star</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">Bán trực tiếp - Non Branch</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">Nhóm trực tiếp - G001 Vũ Trường Giang</span></li>
+                                    <li class="step"><span class="circle2"></span><span class="text">AG000001 - Vũ Trường Giang</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-7 col-md-8 col-lg-9 col-xl-10">
+                            <div class="accordion-item">
+                                <div class="accordion-title active-title" data-tab="item1">
+                                    <h2 style="font-size:14px !important">
+                                        THÔNG TIN CÁ NHÂN <i class="bi bi-arrow-up-circle" style="float:right"></i>
+                                    </h2>
+                                </div>
+                                <div class="accordion-content  active-title" id="item1" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .ElementAttr("class", "required-validation")
+                                                    .Label("Họ & tên").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true).Value("Vũ Trường Giang"))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .ElementAttr("class", "required-validation")
+                                                    .Label("Số điện thoại").Value("0978473677").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .ElementAttr("class", "required-validation")
+                                                    .Label("Email").Value("vutru*******@gmail.com").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .ElementAttr("class", "required-validation")
+                                                    .Label("Số CMND").Value("*******2313123").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().SelectBox()
+                                                //.DataSource(d => d.WebApi().Area("Functions").Controller("Product").LoadAction("GetPaymodeList"))
+                                                    //.DisplayExpr("PayModeName")
+                                                    //.ValueExpr("PayModeID")
+                                                    .Placeholder("Chọn")
+                                                    .SearchEnabled(true).Label("Giới tính").LabelMode(EditorLabelMode.Floating)
+                                                    .ShowClearButton(true).ElementAttr("class", "required-validation")
+                                                    .DisplayExpr("Name")
+                                                    .ValueExpr("Code")
+                                                    .Value("1")
+                                                    .DataSource(new object[] {
+                                                new { Code = "1", Name = "Nam"},
+                                                new { Code = "2", Name = "Nữ"},
+                                                    })
+                                                    )
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().DateBox()
+                                                    .Type(DateBoxType.Date)
+                                                    .DisplayFormat("dd/MM/yyyy")
+                                                    .UseMaskBehavior(true)
+                                                    .Placeholder("dd/mm/yyyy")
+                                                    .Label("Ngàysinh").LabelMode(EditorLabelMode.Floating)
+                                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                                    .Value(DateTime.Now.AddYears(-20))
+                                                    )
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .ElementAttr("class", "required-validation")
+                                                    .Label("Địa chỉ").Value("Lô B3, đường Sáng Tạo, P. Tân Thuận Đông, Q.7, TP.HCM").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <div class="accordion-title active-title" data-tab="item2">
+                                    <h2 style="font-size:14px !important">
+                                        TÌNH TRẠNG HOẠT ĐỘNG <i class="bi bi-arrow-up-circle" style="float:right"></i>
+                                    </h2>
+                                </div>
+                                <div class="accordion-content  active-title" id="item2" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .Label("Trình trạng").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true).Value("Đã nghỉ việc"))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .Label("Ngày gia nhập").Value("29/12/2012").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .Label("Ngày thôi việc").Value("31/11/2017").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <div class="accordion-title active-title" data-tab="item3">
+                                    <h2 style="font-size:14px !important">
+                                        HỌC VẤN & NGHỀ NGHIỆP <i class="bi bi-arrow-up-circle" style="float:right"></i>
+                                    </h2>
+                                </div>
+                                <div class="accordion-content  active-title" id="item3" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .Label("Trình độ").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true).Value("Đại học"))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .Label("Chuyên ngành").Value("Quản trị kinh doanh").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().TextBox()
+                                                    .Label("Loại tốt nghiệp").Value("Khá").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true))
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <div class="accordion-title active-title" data-tab="item4">
+                                    <h2 style="font-size:14px !important">
+                                        CHỪNG TỪ CÁ NHÂN <i class="bi bi-arrow-up-circle" style="float:right"></i>
+                                    </h2>
+                                </div>
+                                <div class="accordion-content  active-title" id="item4" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                            <div class="form-group">
+                                                @(Html.DevExtreme().DataGrid()
+                                                        .ID("gridDocumente")
+                                                        .DataSource(d => d.WebApi()
+                                                        .Area("Account")
+                                                        .Controller("PersonalInfo")
+                                                        .LoadAction("GetDocumenteList")
+                                                        )
+                                                        .ShowBorders(true)
+                                                        .Selection(s => s.Mode(SelectionMode.Single))
+                                                        .Columns(columns =>
+                                                        {
+                                                            columns.Add().DataField(nameof(DocumenteAppModel.DocumentName)).Caption("Tên chứng từ").Width(300);
+                                                            columns.Add().DataField(nameof(DocumenteAppModel.FileName)).Caption("Tên file");
+                                                            columns.Add().Caption("").Width(10)
+                                                        .CellTemplate(@<text>
+                                                            <span class="glyphicon glyphicon-cloud-download  icon-grid"></span>
+                                                        </text>);
+                                                        })
+                                                    .ColumnHidingEnabled(true)
+                                                    .AllowColumnResizing(true)
+                                                    .ColumnAutoWidth(true)
+                                                    .ColumnMinWidth(50)
+                                                    .ShowRowLines(true)
+                                                    .FilterRow(f => f.Visible(false))
+                                                    .HeaderFilter(f => f.Visible(false))
+                                                    .GroupPanel(p => p.Visible(false))
+                                                    .Grouping(g => g.AutoExpandAll(true))
+                                                    .RemoteOperations(false)
+                                                    .WordWrapEnabled(true)
+                                                    )
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".accordion-title").click(function (e) {
+            var accordionitem = $(this).attr("data-tab");
+            $("#" + accordionitem).slideToggle();
+
+            //console.log(this);
+            var classItem = $(this).attr("class");
+            //console.log("classItem", classItem);
+            if (classItem == "accordion-title active-title") {
+                $("i.bi-arrow-up-circle", this).removeClass("bi-arrow-up-circle").toggleClass("bi-arrow-down-circle");
+                $(this).removeClass("active-title");
+            }
+            else {
+                $("i.bi-arrow-down-circle", this).toggleClass("bi-arrow-up-circle").removeClass("bi-arrow-down-circle");
+                $(this).toggleClass("active-title");
+            }
+        });
+
+    });
+</script>

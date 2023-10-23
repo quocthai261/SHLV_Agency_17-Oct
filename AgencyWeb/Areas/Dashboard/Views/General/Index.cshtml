@@ -1,0 +1,301 @@
+﻿<div class="wrapper" style="background: url('../images/Dashboard/background.png') center no-repeat;">
+
+    <div class="content">
+        <div class="bg-shape">
+            <img src="../images/Dashboard/logo.png" alt="">
+        </div>
+        <div class="product-img">
+            <div class="product-img__item" id="img1">
+                <img src="../images/Dashboard/item-1.png" alt="star wars" class="product-img__img">
+            </div>
+
+            <div class="product-img__item" id="img2">
+                <img src="../images/Dashboard/item-2.png" alt="star wars" class="product-img__img">
+            </div>
+
+            <div class="product-img__item" id="img3">
+                <img src="../images/Dashboard/item-3.png" alt="star wars" class="product-img__img">
+            </div>
+
+            <div class="product-img__item" id="img4">
+                <img src="../images/Dashboard/item-4.png" alt="star wars" class="product-img__img">
+            </div>
+        </div>
+        <div class="product-slider">
+            <button class="prev disabled">
+                <span class="icon">
+                    <svg class="icon icon-arrow-right"><use xlink:href="#icon-arrow-left"></use></svg>
+                </span>
+            </button>
+            <button class="next">
+                <span class="icon">
+                    <svg class="icon icon-arrow-right"><use xlink:href="#icon-arrow-right"></use></svg>
+                </span>
+            </button>
+            <div class="product-slider__wrp swiper-wrapper">
+                <div class="product-slider__item swiper-slide" data-target="img4">
+                    <div class="product-slider__card">
+                        <img src="../images/Dashboard/item-1-bg.png" alt="star wars" class="product-slider__cover">
+                        <div class="product-slider__content">
+                            <h1 class="product-slider__title">
+                                CHƯƠNG TRÌNH THI ĐUA <br>
+                                VÀ XẾP HẠNG
+                            </h1>
+                            <div class="product-ctr">
+                                <div class="row">
+@*                                     <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onRegisterNewContestClicked()">
+                                        <div>
+                                            <img src="/images/icon/new.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Đăng ký thi đua</strong>
+                                    </div>
+ *@
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onGetHappeningContestClicked()">
+                                        <div>
+                                            <img src="/images/icon/happenning.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Thi đua đang diễn ra</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onGetFinishedContestClicked()">
+                                        <div><img src="/images/icon/finished.svg" class="icon-contest-img" /></div>
+                                        <strong class="form-title">Thi đua đã đăng ký</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onGetIncompleteContestClicked()">
+                                        <div>
+                                            <img src="/images/icon/incomplete.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Kết thúc thi đua</strong>
+                                    </div>
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onRankingClicked()">
+                                        <div>
+                                            <img src="/images/icon/ranking.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Xếp hạng</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-slider__bottom">
+                                <button class="product-slider__cart">
+                                    TÌM HIỂU THÊM
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-slider__item swiper-slide" data-target="img1">
+                    <div class="product-slider__card">
+                        <img src="../images/Dashboard/item-2-bg.png" alt="star wars" class="product-slider__cover">
+                        <div class="product-slider__content">
+                            <h1 class="product-slider__title">
+                                THÔNG TIN <br>
+                                KINH DOANH
+                            </h1>
+                            <div class="product-ctr">
+                                <div class="row">
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onHumanResourcesClicked()">
+                                        <div>
+                                            <img src="/images/icon/human-resources.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Danh sách TVTC</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onDailySaleReportClicked()">
+                                        <div>
+                                            <img src="/images/icon/sale-report.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Báo cáo kinh doanh</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onBonusesClicked()">
+                                        <div><img src="/images/icon/bonuses.svg" class="icon-contest-img" /></div>
+                                        <strong class="form-title">Các khoản thưởng</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onIncomeClicked()">
+                                        <div>
+                                            <img src="/images/icon/income.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Thu nhập</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-slider__bottom">
+                                <button class="product-slider__cart">
+                                    TÌM HIỂU THÊM
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-slider__item swiper-slide" data-target="img2">
+                    <div class="product-slider__card">
+                        <img src="../images/Dashboard/item-3-bg.png" alt="star wars" class="product-slider__cover">
+                        <div class="product-slider__content">
+                            <h1 class="product-slider__title">
+                                DỊCH VỤ <br>
+                                KHÁCH HÀNG
+                            </h1>
+                            <div class="product-ctr">
+                                <div class="row">
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onPolicyClicked()">
+                                        <div>
+                                            <img src="/images/icon/policy.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Hồ sơ hợp đồng</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onClaimReportClicked()">
+                                        <div>
+                                            <img src="/images/icon/claim.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">
+                                            Yêu cầu giải quyết QLBH
+                                        </strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onPremiumCollectionReportClicked()">
+                                        <div><img src="/images/icon/fee-based-contract.svg" class="icon-contest-img" /></div>
+                                        <strong class="form-title">Hợp đồng cần thu phí</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onCustomerBirthdayClicked()">
+                                        <div>
+                                            <img src="/images/icon/birthday.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Sinh nhật khách hàng</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-slider__bottom">
+                                <button class="product-slider__cart">
+                                    TÌM HIỂU THÊM
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-slider__item swiper-slide" data-target="img3">
+                    <div class="product-slider__card">
+                        <img src="../images/Dashboard/item-4-bg.png" alt="star wars" class="product-slider__cover">
+                        <div class="product-slider__content">
+                            <h1 class="product-slider__title">
+                                TÍNH NĂNG <br>
+                                HỖ TRỢ
+                            </h1>
+                            <div class="product-ctr">
+                                <div class="row">
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onNewsAndEventClicked()">
+                                        <div>
+                                            <img src="/images/icon/new.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Tin tức & sự kiện</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onSaleReportClicked()">
+                                        <div>
+                                            <img src="/images/icon/notification.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Biểu mẫu & thông báo</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onSchedulerClicked()">
+                                        <div><img src="/images/icon/scheduler.svg" class="icon-contest-img" /></div>
+                                        <strong class="form-title">Lịch biểu</strong>
+                                    </div>
+
+                                    <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 icon-contest-dashboard" onclick="onPersonalInfoClicked()">
+                                        <div>
+                                            <img src="/images/icon/personal-info.svg" class="icon-contest-img" />
+                                        </div>
+                                        <strong class="form-title">Thông tin cá nhân</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-slider__bottom">
+                                <button class="product-slider__cart">
+                                    TÌM HIỂU THÊM
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("PopupFirstLogin")
+
+<script>
+    $(document).ready(function () {
+        var modal = document.getElementById("popupFirstLogin");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    });
+
+    function onRegisterNewContestClicked() {
+        location.href = '@Url.Action("Index", "Register", new { area = "Functions", typeOfContest = "new" })';
+    }
+
+    function onGetHappeningContestClicked() {
+        location.href = '@Url.Action("Index", "Register", new { area = "Functions", typeOfContest = "happening" })';
+    }
+
+    function onGetFinishedContestClicked() {
+        location.href = '@Url.Action("Index", "Register", new { area = "Functions", typeOfContest = "finished" })';
+    }
+
+    function onGetIncompleteContestClicked() {
+        location.href = '@Url.Action("Index", "Register", new { area = "Functions", typeOfContest = "incomplete" })';
+    }
+    
+    function onRankingClicked() {
+        location.href = '@Url.Action("Index", "Ranking", new { area = "Functions"})';
+    }
+
+    function onHumanResourcesClicked() {
+        location.href = '@Url.Action("Index", "Agent", new { area = "BusinessIndicators"})';
+    }
+
+    function onDailySaleReportClicked() {
+        location.href = '@Url.Action("Index", "DailySalesReport", new { area = "BusinessIndicators"})';
+    }
+
+    function onBonusesClicked() {
+        location.href = '@Url.Action("Index", "Bonus", new { area = "Functions"})';
+    }
+
+    function onIncomeClicked() {
+        location.href = '@Url.Action("Index", "ISInhouse", new { area = "BusinessIndicators"})';
+    }
+
+    function onPersonalInfoClicked() {
+        location.href = '@Url.Action("Index", "PersonalInfo", new { area = "Account"})';
+    }
+
+    function onPolicyClicked() {
+        location.href = '@Url.Action("Index", "ContractRecord", new { area = "Functions"})';
+    }
+
+    function onClaimReportClicked() {
+        location.href = '@Url.Action("Index", "ClaimReport", new { area = "Functions"})';
+    }
+
+    function onPremiumCollectionReportClicked() {
+        location.href = '@Url.Action("Index", "PremiumCollectionReport", new { area = "Functions"})';
+    }
+
+    function onCustomerBirthdayClicked() {
+        location.href = '@Url.Action("Index", "CustomerBirthday", new { area = "Functions"})';
+    }
+
+    function onNewsAndEventClicked() {
+        location.href = '@Url.Action("Index", "NewsAndEvent", new { area = "Functions"})';
+    }
+
+    function onSchedulerClicked() {
+        location.href = '@Url.Action("Index", "Scheduler", new { area = "Account"})';
+    }
+</script>
